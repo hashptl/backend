@@ -12,9 +12,9 @@ This is a README file for the DDCNA project.
 ## Setup Instructions
 
 1.  Clone the repository:
-
-```bash git clone https://github.com/hashptl/server.git
-
+```bash 
+git clone https://github.com/hashptl/server.git
+```
 
 2.  Create a virtual environment:
 
