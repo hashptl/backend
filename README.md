@@ -24,10 +24,12 @@ git clone https://github.com/hashptl/server.git
 #### 3.  Activate the virtual environment:
 
  -   For Windows:
-        .\env\Scripts\activate
+
+       ` .\env\Scripts\activate `
 
 -   For Unix/Linux:
-        source env/bin/activate
+
+       ` source env/bin/activate `
     
 
 #### 4.  Install project dependencies:
