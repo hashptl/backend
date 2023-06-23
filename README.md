@@ -7,7 +7,7 @@ This is a README file for the DDCNA project.
 
 [![Django](https://img.shields.io/badge/Django-3.x-brightgreen.svg)](https://www.djangoproject.com/)
 [![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-<version>-green.svg)](https://www.mongodb.com/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-<5.0>-green.svg)](https://www.mongodb.com/)
 
 ## Setup Instructions
 
