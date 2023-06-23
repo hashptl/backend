@@ -5,8 +5,9 @@ This is a README file for the DDCNA project.
 
 ## Prerequisites
 
--   Python 3.x
--   MongoDB
+[![Django](https://img.shields.io/badge/Django-3.x-brightgreen.svg)](https://www.djangoproject.com/)
+[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
+[![MongoDB](https://img.shields.io/badge/MongoDB-<version>-green.svg)](https://www.mongodb.com/)
 
 ## Setup Instructions
 
@@ -73,8 +74,6 @@ To access the admin site, follow these steps:
 
 You should now have access to the Django admin site.
 
-[![Django](https://img.shields.io/badge/Django-3.x-brightgreen.svg)](https://www.djangoproject.com/)
-[![Python](https://img.shields.io/badge/Python-3.x-blue.svg)](https://www.python.org/)
-[![MongoDB](https://img.shields.io/badge/MongoDB-<version>-green.svg)](https://www.mongodb.com/)
+
 
 
