@@ -19,19 +19,16 @@ git clone https://github.com/hashptl/server.git
 #### 2.  Create a virtual environment:
   ```bash
   python3 -m venv env
-````
+```
 
 #### 3.  Activate the virtual environment:
 
  -   For Windows:
-    ```bash         
         .\env\Scripts\activate
-    ```
 
 -   For Unix/Linux:
-  ```bash
         source env/bin/activate
-    ```
+    
 
 #### 4.  Install project dependencies:
 ```bash
