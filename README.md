@@ -11,19 +11,19 @@ This is a README file for the DDCNA project.
 
 ## Setup Instructions
 
-1.  Clone the repository:
+#### 1.  Clone the repository:
 ```bash 
 git clone https://github.com/hashptl/server.git
 ```
 
-2.  Create a virtual environment:
+#### 2.  Create a virtual environment:
+  ```bash
+  python3 -m venv env
+````
 
-python3 -m venv env
+#### 3.  Activate the virtual environment:
 
-
-3.  Activate the virtual environment:
-
--   For Windows:
+ -   For Windows:
 
         .\env\Scripts\activate
 
@@ -31,35 +31,35 @@ python3 -m venv env
 
         source env/bin/activate
 
-4.  Install project dependencies:
-
+#### 4.  Install project dependencies:
+```bash
 pip install -r requirements.txt
+```
 
-
-5.  Set up MongoDB:
+#### 5.  Set up MongoDB:
 
 -   Create a MongoDB database with the required credentials (username
     and password).
 
-6.  Configure the Django settings:
+#### 6.  Configure the Django settings:
 
 -   Open the `settings.py` file in the `server` folder.
 -   Update the MongoDB database credentials in the `DATABASES` section.
 
-7.  Run database migrations:
-
+#### 7.  Run database migrations:
+```bash
 python manage.py migrate
+```
 
-
-8.  Create a superuser for the admin site:
-
+#### 8.  Create a superuser for the admin site:
+```bash
 python manage.py createsuperuser
+```
 
-
-9.  Start the Django development server:
-
+#### 9.  Start the Django development server:
+```bash
 python manage.py runserver
-
+```
 The server should now be running at `http://localhost:8000/`.
 
 ## Accessing the Admin Site
@@ -72,7 +72,7 @@ To access the admin site, follow these steps:
 -   Username: hiren
 -   Password: Hiren@1234
 
-You should now have access to the Django admin site.
+_You should now have access to the Django admin site._
 
 
 
