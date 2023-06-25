@@ -1,4 +1,5 @@
 import json
+import pymongo
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User
 from django.http import JsonResponse
@@ -6,6 +7,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 # from .models import IntakeForm, Request, Template
 
+# Connect to MongoDB
+client = pymongo.MongoClient("mongodb+srv://ptlhiren535:LB0gJ43jzl8gTPJS@ddcna.lvuyy8j.mongodb.net/?retryWrites=true&w=majority")
+db = client["ddcna"]
+collection = db["IntakeForm"]
 
 @csrf_exempt
 def sign_up_api(request):
@@ -51,49 +56,82 @@ def sign_in_api(request):
         return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 
+"""
+Intake Form API
+"""
 @csrf_exempt
 def intake_form_api(request):
     if request.method == 'POST':
-        # Process the form submission and save the data to the database
-        form_data = request.POST
-        # Validate and save the form data to the IntakeForm model
-        intake_form = IntakeForm.objects.create(
-            state=form_data.get('state'),
-            requestor_type=form_data.get('requestor_type'),
-            request_type=form_data.get('request_type'),
-            first_name=form_data.get('first_name'),
-            last_name=form_data.get('last_name'),
-            email=form_data.get('email'),
-            request_details=form_data.get('request_details'),
-            last_4_ssn=form_data.get('last_4_ssn'),
-            employee_id=form_data.get('employee_id'),
-            address=form_data.get('address')
-        )
+        data = request.POST
+
+        # Basic validation for required fields
+        state = data.get('state')
+        requestor_type = data.get('requestor_type')
+        request_type = data.get('request_type')
+        first_name = data.get('first_name')
+        last_name = data.get('last_name')
+        email = data.get('email')
+
+        if not state or not requestor_type or not request_type or not first_name or not last_name or not email:
+            return JsonResponse({'success': False, 'message': 'Required fields are missing.'})
+
+        # Perform additional validation based on the selected requestor type
+        if requestor_type == 'Customer':
+            request_details = data.get('request_details')
+            if not request_details:
+                return JsonResponse({'success': False, 'message': 'Request details are required for customers.'})
+
+        elif requestor_type == 'Employee':
+            request_details = data.get('request_details')
+            ssn_last_4 = data.get('ssn_last_4')
+            employee_id = data.get('employee_id')
+
+            if not request_details:
+                return JsonResponse({'success': False, 'message': 'Request details are required for employees.'})
+
+            # Additional validation for optional fields
+            if ssn_last_4 and len(ssn_last_4) != 4:
+                return JsonResponse({'success': False, 'message': 'Invalid SSN last 4 digits.'})
+
+        elif requestor_type == 'Job Applicant':
+            request_details = data.get('request_details')
+            address = data.get('address')
+
+            if not request_details:
+                return JsonResponse({'success': False, 'message': 'Request details are required for job applicants.'})
+
+        elif requestor_type == 'Vendor':
+            request_details = data.get('request_details')
+
+            if not request_details:
+                return JsonResponse({'success': False, 'message': 'Request details are required for vendors.'})
+
+        else:
+            return JsonResponse({'success': False, 'message': 'Invalid requestor type.'})
+
+        # Check for duplicate entry in the collection
+        existing_entry = collection.find_one({'email': email})
+        if existing_entry:
+            return JsonResponse({'success': False, 'message': 'Duplicate entry. Form already submitted.'})
+
+        # Save the form data to the database
+        form_data = {
+            'state': state,
+            'requestor_type': requestor_type,
+            'request_type': request_type,
+            'first_name': first_name,
+            'last_name': last_name,
+            'email': email,
+            'request_details': request_details,
+            'ssn_last_4': data.get('ssn_last_4'),
+            'employee_id': data.get('employee_id'),
+            'address': data.get('address'),
+        }
+        collection.insert_one(form_data)
+
         return JsonResponse({'success': True, 'message': 'Form submitted successfully.'})
     else:
-        # Handle GET request for retrieving the form fields dynamically
-        # You can define a dictionary of dynamic form fields based on the menu selections
-        dynamic_form_fields = {
-            'CA': {
-                'Customer': ['First Name', 'Last Name', 'Email Address', 'Request Details (Optional)'],
-                'Employee': ['First Name', 'Last Name', 'Email Address', 'Request Details (Optional)', 'Last 4 of SSN (Optional)', 'Employee ID (Optional)'],
-                'Job Applicant': ['First Name', 'Last Name', 'Email Address', 'Request Details (Optional)', 'Address (Optional)'],
-                'Vendor': ['First Name', 'Last Name', 'Email Address', 'Request Details (Optional)']
-            },
-            'VA': {
-                # Define fields for VA state
-            },
-            'CO': {
-                # Define fields for CO state
-            },
-            'UT': {
-                # Define fields for UT state
-            }
-        }
-        state = request.GET.get('state', '')
-        requestor_type = request.GET.get('requestor_type', '')
-        fields = dynamic_form_fields.get(state, {}).get(requestor_type, [])
-        return JsonResponse({'fields': fields})
+        return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
 
 def requests_api(request):

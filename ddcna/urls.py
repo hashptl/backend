@@ -15,10 +15,11 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core.views import sign_up_api, sign_in_api
+from core.views import sign_up_api, sign_in_api, intake_form_api
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/sign-up/', sign_up_api, name='sign_up'),
     path('api/sign-in/', sign_in_api, name='sign_in'),
+    path('api/intake-form/', intake_form_api, name='intake_form')
 ]

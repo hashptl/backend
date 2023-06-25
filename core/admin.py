@@ -21,6 +21,10 @@ class UserAdmin(BaseUserAdmin):
     sign_in_link.short_description = 'Sign In API'
     readonly_fields = ['sign_up_link', 'sign_in_link']
 
+class IntakeFormAdmin(admin.ModelAdmin):
+    list_display = ['state', 'requestor_type', 'request_type', 'first_name', 'last_name', 'email']
+
+
 admin.site.unregister(User)
 admin.site.register(User, UserAdmin)
 
@@ -34,6 +38,7 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register_view('sign-up/', view=sign_up_api, name='sign_up')
 admin.site.register_view('sign-in/', view=sign_in_api, name='sign_in')
+admin.site.register(IntakeForm, IntakeFormAdmin)
 
 admin.site.register(IntakeForm)
 admin.site.register(Request)
