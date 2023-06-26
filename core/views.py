@@ -62,74 +62,77 @@ Intake Form API
 @csrf_exempt
 def intake_form_api(request):
     if request.method == 'POST':
-        data = request.POST
+        try:
+            data = json.loads(request.body)
 
-        # Basic validation for required fields
-        state = data.get('state')
-        requestor_type = data.get('requestor_type')
-        request_type = data.get('request_type')
-        first_name = data.get('first_name')
-        last_name = data.get('last_name')
-        email = data.get('email')
+            # Basic validation for required fields
+            state = data.get('state')
+            requestor_type = data.get('requestor_type')
+            request_type = data.get('request_type')
+            first_name = data.get('first_name')
+            last_name = data.get('last_name')
+            email = data.get('email')
 
-        if not state or not requestor_type or not request_type or not first_name or not last_name or not email:
-            return JsonResponse({'success': False, 'message': 'Required fields are missing.'})
+            if not state or not requestor_type or not request_type or not first_name or not last_name or not email:
+                return JsonResponse({'success': False, 'message': 'Required fields are missing.'})
 
-        # Perform additional validation based on the selected requestor type
-        if requestor_type == 'Customer':
-            request_details = data.get('request_details')
-            if not request_details:
-                return JsonResponse({'success': False, 'message': 'Request details are required for customers.'})
+            # Perform additional validation based on the selected requestor type
+            if requestor_type == 'Customer':
+                request_details = data.get('request_details')
+                if not request_details:
+                    return JsonResponse({'success': False, 'message': 'Request details are required for customers.'})
 
-        elif requestor_type == 'Employee':
-            request_details = data.get('request_details')
-            ssn_last_4 = data.get('ssn_last_4')
-            employee_id = data.get('employee_id')
+            elif requestor_type == 'Employee':
+                request_details = data.get('request_details')
+                ssn_last_4 = data.get('ssn_last_4')
+                employee_id = data.get('employee_id')
 
-            if not request_details:
-                return JsonResponse({'success': False, 'message': 'Request details are required for employees.'})
+                if not request_details:
+                    return JsonResponse({'success': False, 'message': 'Request details are required for employees.'})
 
-            # Additional validation for optional fields
-            if ssn_last_4 and len(ssn_last_4) != 4:
-                return JsonResponse({'success': False, 'message': 'Invalid SSN last 4 digits.'})
+                # Additional validation for optional fields
+                if ssn_last_4 and len(ssn_last_4) != 4:
+                    return JsonResponse({'success': False, 'message': 'Invalid SSN last 4 digits.'})
 
-        elif requestor_type == 'Job Applicant':
-            request_details = data.get('request_details')
-            address = data.get('address')
+            elif requestor_type == 'Job Applicant':
+                request_details = data.get('request_details')
+                address = data.get('address')
 
-            if not request_details:
-                return JsonResponse({'success': False, 'message': 'Request details are required for job applicants.'})
+                if not request_details:
+                    return JsonResponse({'success': False, 'message': 'Request details are required for job applicants.'})
 
-        elif requestor_type == 'Vendor':
-            request_details = data.get('request_details')
+            elif requestor_type == 'Vendor':
+                request_details = data.get('request_details')
 
-            if not request_details:
-                return JsonResponse({'success': False, 'message': 'Request details are required for vendors.'})
+                if not request_details:
+                    return JsonResponse({'success': False, 'message': 'Request details are required for vendors.'})
 
-        else:
-            return JsonResponse({'success': False, 'message': 'Invalid requestor type.'})
+            else:
+                return JsonResponse({'success': False, 'message': 'Invalid requestor type.'})
 
-        # Check for duplicate entry in the collection
-        existing_entry = collection.find_one({'email': email})
-        if existing_entry:
-            return JsonResponse({'success': False, 'message': 'Duplicate entry. Form already submitted.'})
+            # Check for duplicate entry in the collection
+            existing_entry = collection.find_one({'email': email})
+            if existing_entry:
+                return JsonResponse({'success': False, 'message': 'Duplicate entry. Form already submitted.'})
 
-        # Save the form data to the database
-        form_data = {
-            'state': state,
-            'requestor_type': requestor_type,
-            'request_type': request_type,
-            'first_name': first_name,
-            'last_name': last_name,
-            'email': email,
-            'request_details': request_details,
-            'ssn_last_4': data.get('ssn_last_4'),
-            'employee_id': data.get('employee_id'),
-            'address': data.get('address'),
-        }
-        collection.insert_one(form_data)
+            # Save the form data to the database
+            form_data = {
+                'state': state,
+                'requestor_type': requestor_type,
+                'request_type': request_type,
+                'first_name': first_name,
+                'last_name': last_name,
+                'email': email,
+                'request_details': request_details,
+                'ssn_last_4': data.get('ssn_last_4'),
+                'employee_id': data.get('employee_id'),
+                'address': data.get('address'),
+            }
+            collection.insert_one(form_data)
 
-        return JsonResponse({'success': True, 'message': 'Form submitted successfully.'})
+            return JsonResponse({'success': True, 'message': 'Form submitted successfully.'})
+        except json.JSONDecodeError:
+            return JsonResponse({'success': False, 'message': 'Invalid JSON payload.'})
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
