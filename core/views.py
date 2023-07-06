@@ -201,6 +201,7 @@ def user_list_api(request):
     else:
         return JsonResponse({'success': False, 'message': 'Invalid request method.'})
 
+import uuid
 
 
 @csrf_exempt
@@ -208,6 +209,7 @@ def user_add_api(request):
     if request.method == 'POST':
         data = json.loads(request.body)
 
+        id: str(uuid.uuid4())  # Generate a unique id
         username = data.get('username')
         password = data.get('password')
         email = data.get('email')
@@ -219,6 +221,7 @@ def user_add_api(request):
             'email': email
         }
         userCollection.insert_one(user)
+        print("user", user)
 
         return JsonResponse({'success': True, 'message': 'User added successfully.'})
     else:
