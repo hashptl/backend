@@ -15,11 +15,19 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from core.views import sign_up_api, sign_in_api, intake_form_api
+from core.views import *
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/sign-up/', sign_up_api, name='sign_up'),
     path('api/sign-in/', sign_in_api, name='sign_in'),
-    path('api/intake-form/', intake_form_api, name='intake_form')
+    path('api/intake-form/', intake_form_api, name='intake_form'),
+    path('api/user/list/', user_list_api, name='user_list'), 
+    path('api/user/add/', user_add_api, name='user_add'),
+    path('api/user/update/<str:user_id>/', user_update_api, name='user_update'),
+    path('api/user/delete/<str:user_id>/', user_delete_api, name='user_delete'),
+    path('api/template/list/', template_list_api, name='template_list_api'),
+    path('api/template/form/', template_form_api, name='template_form_api'),
+    path('api/request/list/', request_list_api, name='request_list_api'),
+    path('api/request/details/<str:request_id>/', request_details_api, name='request_details_api'),
 ]
